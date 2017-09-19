@@ -5,6 +5,8 @@ import android.text.TextUtils;
 import com.coolweather.android.db.City;
 import com.coolweather.android.db.County;
 import com.coolweather.android.db.Province;
+import com.coolweather.android.gson.Weather;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -81,4 +83,31 @@ public class Utility {
     /*
     * 这里一共提供了3个方法，分别用于解析和处理服务器返回的省级，市级，县级的数据
     * 处理的方式是类似的，先使用JSONArray和JSONObject将数据解析出来，然后组装成实体类对象，再调用save（）方法将数据存储到数据库中，由于这里的JSON数据结构比较简化，我们就不使用GSON来进行解析了*/
+    /**
+
+     * 将返回的JSON数据解析成Weather实体类
+
+     */
+
+    public static Weather handleWeatherResponse(String response) {
+
+        try {
+
+            JSONObject jsonObject = new JSONObject(response);
+
+            JSONArray jsonArray = jsonObject.getJSONArray("HeWeather");
+
+            String weatherContent = jsonArray.getJSONObject(0).toString();
+
+            return new Gson().fromJson(weatherContent, Weather.class);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        }
+
+        return null;
+
+    }
 }
